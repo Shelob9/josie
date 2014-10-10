@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css" src="css/vendor/normalize.css"></style>
+    <style type="text/css" src="css/vendor/foundation.min.css"></style>
+    <style type="text/css" src="css/app.css"></style>
+    <script src="js/vendor/modernizr.js"></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div class="off-canvas-wrap" data-offcanvas>
+    <div class="inner-wrap">
+
+        <nav class="tab-bar">
+            <section class="left-small">
+                <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+            </section>
+
+            <section class="middle tab-bar-section">
+                <a href="index.html">JPWP</a>
+            </section>
+
+
+        </nav>
+
+        <!-- Off Canvas Menu -->
+        <aside class="left-off-canvas-menu">
+            <!-- whatever you want goes here -->
+            <ul id="main-menu">
+                <li><a href="#">Item 1</a></li>
+                ...
+            </ul>
+        </aside>
+
+        <!--Main content gets put in here-->
+        <div id="main"></div>
+
+    </div>
+</div>
+<div id="site-footer"></div>
+
+<!--Templates go here -->
+<!--@todo move to subdir and pull them in via ajax?-->
+
+<!--template for multiple posts-->
+<script id="posts" type="text/x-handlebars-template">
+
+    <article id="post-preview-{{ID}}" data-id="{{ID}}" class="post-preview post-{{ID}}">
+        <header>
+            <h3 class="post-title">{{title}}</h3>
+            <div class="entry-meta">
+                <p>By: {{author.name}} on {{dateFormat date}}</p>
+            </div>
+        </header>
+        <div class="featured-image">
+            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+        </div>
+        <div class="entry-excerpt">{{{excerpt}}}</div>
+        <footer>
+                <span class="post-link">
+                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
+                </span>
+
+        </footer>
+    </article>
+</script>
+
+<script id="post" type="text/x-handlebars-template">
+
+    <article id="post-{{ID}}" data-id="{{ID}}" class="post post-{{ID}}">
+        <header>
+            <h3 class="post-title">{{title}}</h3>
+            <div class="entry-meta">
+                <p>By: {{author.name}} on {{dateFormat date}}</p>
+            </div>
+        </header>
+        <div class="featured-image">
+            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+        </div>
+        <div class="entry-content">{{{content}}}</div>
+        <footer>
+                <span class="post-link">
+                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
+                </span>
+                <div class="post-categories">
+                    {{#categories terms.category}}
+                        {{name}}
+                    {{/categories}}
+                </div>
+        </footer>
+    </article>
+</script>
+
+
+
+
+<!--template for term listings posts-->
+<script id="terms" type="text/x-handlebars-template">
+
+    <article id="term-{{ID}}" data-id="{{ID}}" class="term term-{{ID}}">
+        <header>
+            <h3 class="term-name">{{name}}</h3>
+
+        </header>
+
+        <div class="entry-content">{{{description}}}</div>
+        <p><a href="#taxonomy={{taxonomy}}&term={{slug}}">See Items</a></p>
+        <footer>
+
+        </footer>
+    </article>
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/vendor/fastclick.js"></script>
+<script type="text/javascript" src="js/vendor/foundation.min.js"></script>
+<script type="text/javascript" src="js/vendor/handlebars.min.js"></script>
+<script type="text/javascript" src="js/jpwp.js"></script>
+
+
+
+</body>
+</html>
