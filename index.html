@@ -126,7 +126,19 @@
 <script type="text/javascript" src="js/vendor/foundation.min.js"></script>
 <script type="text/javascript" src="js/vendor/handlebars.min.js"></script>
 <script type="text/javascript" src="js/jpwp.js"></script>
+<!--Initialization for JPWP App-->
+<script type="text/javascript">
+        var params = {
+            rootURL : 'http://local.wordpress.dev/wp-json',
+            siteTitle: 'JPWP',
+            postsPerPage: 10,
+            mainContainer: '#main',
+            mainMenuContainer: "#main-menu",
+            mainMenuName: "app"
 
+        };
+        window.paramsJPWP = params;
+</script>
 
 
 </body>

@@ -1,15 +1,5 @@
 jQuery( function () {
-    var params = {
-        rootURL : 'http://local.wordpress.dev/wp-json',
-        siteTitle: 'JPWP',
-        postsPerPage: 10,
-        mainContainer: '#main',
-        mainMenuContainer: "#main-menu",
-        mainMenuName: "app"
-
-    };
-    JPWP.init( params );
-
+    JPWP.init( paramsJPWP );
 } );
 
 (function ( $, app ) {
@@ -256,6 +246,7 @@ jQuery( function () {
 
 
 })( jQuery, window.JPWP || ( window.JPWP = {} ) );
+
 
 $( document ).ready(function() {
     JPWP.routeEvent();
