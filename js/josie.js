@@ -249,16 +249,18 @@ jQuery( function () {
         next += 1;
         var html = '<ul class="pagination" role="menubar" aria-label="Pagination" id="pagination">';
 
-        html += '<li class="arrow"><a href="#page=' + next + ' " title="Next Page">Next &raquo;</a></li>';
-
         if ( current > 1 ) {
             var previous = currentPage;
             previous -= 1;
-            html =+ '<li class="arrow unavailable" aria-disabled="true">' +
-            '<a href="#page=' + previous + '" title="Previous Page">&laquo; Previous</a>' +
-            '</li>';
-
+            html += '<li class="arrow unavailable" aria-disabled="true">';
+            html += '<a href="#page=' + previous + '" title="Previous Page">&laquo; Previous</a></li>';
         }
+
+        html += '<li class="arrow"><a href="#page=';
+        html += next;
+        html +='" title="Next Page">Next &raquo;</a></li>';
+
+
         html += '</div>';
 
 
