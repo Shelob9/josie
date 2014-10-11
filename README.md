@@ -1,8 +1,10 @@
 JOSIE
 =====
-<p><img src="img/josie.jpg" style="float:left;">
-Josie is a simple starter single page app written in JavaScript designed to make use of the [WordPress REST API](http://wp-api.org). It runs separately from the WordPress install and is designed to be a starting point for developing an app that uses WordPress as its back-end CMS. Handlebars.js is used for templating, and methods are provided for getting posts, single posts, taxonomy terms and terms in a taxonomy. Support for managing menus in WordPress is enabled via an optional WordPress plugin. Custom post type and Pods support is planned.
-</p>
+<p style="display:inline-block;text-align:center;"><img src="img/josie.jpg"  /></p>
+Josie is a simple starter single page app written in JavaScript designed to make use of the [WordPress REST API](http://wp-api.org). It runs separately from the WordPress install and is designed to be a starting point for developing an app that uses WordPress as its back-end CMS.
+
+Handlebars.js is used for templating, and methods are provided for getting posts, single posts, taxonomy terms and terms in a taxonomy. Support for managing menus in WordPress is enabled via an optional WordPress plugin. Custom post type and Pods support is planned.
+
 Be sure to read the instructions below as there are some steps that if not followed will prevent this from working properly.
 
 ### Requirements & Recommendations For Your WordPress Site
