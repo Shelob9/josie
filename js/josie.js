@@ -285,7 +285,7 @@ jQuery( function () {
         }
         $.ajax({
             type: 'GET',
-            url: app.params.rootURL + '/Josie/menus/' + menuName,
+            url: app.params.rootURL + '/jwp/menus/' + menuName,
             dataType: 'json',
             success: function(items){
 

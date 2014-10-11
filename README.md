@@ -63,7 +63,7 @@ Alone, this hook/function is a potential security risk if you have lots of posts
 ### Setting Up The App
 In index.html, configuration options are set in the object params, which must be added to the window scope after it is defined. The object must have 6 indexes, as follows:
 
-*rootURL - The URL for the WordPress REST API. Typically this is your url /wp-json, but it can be changed with a filter.
+* rootURL - The URL for the WordPress REST API. Typically this is your url /wp-json, but it can be changed with a filter.
 * siteTitle - The name of the app/site.
 * postsPerPage - Number of posts to show per page.
 * mainContainer - The container to populate post data into. If using index.html as is, use "#main".
