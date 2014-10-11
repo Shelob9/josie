@@ -2,10 +2,10 @@ jQuery( function () {
     var params = {
         rootURL : 'http://local.wordpress.dev/wp-json',
         siteTitle: 'JPWP',
-        postsPerPage: 3,
+        postsPerPage: 10,
         mainContainer: '#main',
         mainMenuContainer: "#main-menu",
-        mainMenuItems: "",
+        mainMenuName: "app"
 
     };
     JPWP.init( params );
@@ -19,7 +19,7 @@ jQuery( function () {
      */
     app.init = function( params ) {
        app.params = params;
-
+        app.menuItems( params.mainMenuName, params.mainMenuContainer );
     };
 
     app.routeEvent = function( ) {
@@ -211,9 +211,48 @@ jQuery( function () {
         $(app.params.mainContainer).append(html);
     };
 
+    app.menuItems = function( menuName, menuContainer ) {
+        $.ajax({
+            type: 'GET',
+            url: app.params.rootURL + '/jpwp/menus/' + menuName,
+            dataType: 'json',
+            success: function(items){
+
+                $.each( items, function(index, item) {
+                    if ( item.object == 'post' || item.object == 'page') {
+                        $(menuContainer).append(
+                            '<li>' +
+                                '<a href="#' + item.ID + '">' + item.title + '</a>' +
+                            '</li>'
+                        );
+                    } else if ( item.object == 'category' || item.object == 'tag' ) {
+                        $(menuContainer).append(
+                            '<li>' +
+                             '<a href="#taxonomy=' + item.object + '&term=' + item.title + '">' + item.title + '</a>' +
+                            '</li>'
+                        );
+                    }
+                    else if ( item.object == 'custom' ) {
+                        $(menuContainer).append(
+                            '<li>' +
+                                '<a href="'+item.url +'">' + item.title + '</a>' +
+                            '</li>'
+                        );
+                    }
+
+                });
+
+            },
+            error: function(error){
+                console.log(error);
+            }
+
+        });
+    };
+
     app.emptyContainer = function() {
         $( app.params.mainContainer).fadeOut().empty();
-    }
+    };
 
 
 })( jQuery, window.JPWP || ( window.JPWP = {} ) );
@@ -240,7 +279,7 @@ $( document ).ready(function() {
 
 
 Handlebars.registerHelper('categories', function(items, options) {
-    var out = "Categories: <ul class='post-categories'>";
+    var out = "Categories: <ul class='post-categories inline-list'>";
 
     for(var i=0, l=items.length; i<l; i++) {
         var slug = items[i].slug;
