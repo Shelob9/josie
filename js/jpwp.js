@@ -1,3 +1,13 @@
+/**
+ * JPWP WordPress REST API Powered SPA
+ *
+ * @version 0.1.0
+ *
+ * @copyright 2014 Josh Pollock (Josh@JoshPress.net)
+ * @license GNU General Public License v2+
+ * @url https://github.com/Shelob9/jpwp-app
+ */
+
 jQuery( function () {
     JPWP.init( paramsJPWP );
 } );
@@ -6,25 +16,38 @@ jQuery( function () {
 
     /**
      * Bootstrap
+     *
+     * @since 0.1.0
      */
     app.init = function( params ) {
        app.params = params;
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
     };
 
+    /**
+     * Handles routing based on URL Hash
+     *
+     * @TODO Find someone who can't even deal with the bad SEO of this to implement push-states or something.
+     *
+     * @since 0.1.0
+     */
     app.routeEvent = function( ) {
 
         var hash = window.location.hash.replace(/^.*?#/,'');
-        console.log( hash );
+
+        //@TODO Static front-page options!
+        //show posts if not hash
         if ( hash == '' || hash == '#' || hash == 'page=1') {
             app.getPosts( 0 );
             app.pagination( 1 );
         }
+        //paginate posts
         else if ( hash.indexOf("page") > -1 ) {
             var offset = hash.split("page=");
 
             app.getPosts( offset[1] );
         }
+        //handle taxonomy archives
         else if ( hash.indexOf("taxonomy") > -1 ) {
             if ( hash.indexOf("page") > -1 ) {
                 var offset = hash.split("page=");
@@ -50,8 +73,6 @@ jQuery( function () {
 
             }
 
-
-
             if ( term == 0 ) {
                 app.listTerms( taxonomy );
             }
@@ -59,13 +80,21 @@ jQuery( function () {
                 app.term( taxonomy, term, offset );
 
             }
+
         }
+        //single posts
         else if ( hash > 0 ) {
             app.getSinglePost( hash );
         }
     };
 
-
+    /**
+     * Get posts
+     *
+     * @param offset The page of results.
+     *
+     * @since 0.1.0
+     */
     app.getPosts  = function( offset ) {
         var postsURL = app.params.rootURL + '/posts?filter[posts_per_page]=' +app.params.postsPerPage;
         if ( undefined != offset && 0 != offset ) {
@@ -104,6 +133,13 @@ jQuery( function () {
         });
     };
 
+    /**
+     * Get a single post
+     *
+     * @param ID The post ID
+     *
+     * @since 0.1.0
+     */
     app.getSinglePost = function( ID ) {
 
         $.ajax({
@@ -128,8 +164,13 @@ jQuery( function () {
 
     };
 
-
-
+    /**
+     * List terms in a taxonomy
+     *
+     * @param taxonomy
+     *
+     * @since 0.1.0
+     */
     app.listTerms = function( taxonomy ) {
         $.ajax({
             type: 'GET',
@@ -156,6 +197,15 @@ jQuery( function () {
         });
     };
 
+    /**
+     * List posts with a specific term in a specific taxonomy
+     *
+     * @param taxonomy The taxonomy's slug
+     * @param slug Term slug or ID
+     * @param offset Page offset
+     *
+     * @since 0.1.0
+     */
     app.term =function( taxonomy, slug, offset ) {
         $.ajax({
             type: 'GET',
@@ -184,6 +234,15 @@ jQuery( function () {
         });
     };
 
+    /**
+     * Handles pagination.
+     *
+     * @TODO Make suck less
+     *
+     * @param current Current Page
+     *
+     * @since 0.1.0
+     */
     app.pagination = function( current ) {
         var currentPage = parseInt( current );
         var next = currentPage;
@@ -201,7 +260,22 @@ jQuery( function () {
         $(app.params.mainContainer).append(html);
     };
 
+    /**
+     * The menu items.
+     *
+     * @requires The JPWP API Plugin be installed on source WP Site for the menus endpoint.
+     *
+     * @todo drop-down support?
+     *
+     * @param menuName Name of menu.
+     * @param menuContainer Container to populate menu lis into.
+     *
+     * @since 0.1.0
+     */
     app.menuItems = function( menuName, menuContainer ) {
+        if ( false == menuName ) {
+            return;
+        }
         $.ajax({
             type: 'GET',
             url: app.params.rootURL + '/jpwp/menus/' + menuName,
@@ -240,6 +314,13 @@ jQuery( function () {
         });
     };
 
+    /**
+     * Empty main container
+     *
+     * @todo Make animation not suck.
+     *
+     * @since 0.1.0
+     */
     app.emptyContainer = function() {
         $( app.params.mainContainer).fadeOut().empty();
     };
@@ -250,25 +331,32 @@ jQuery( function () {
 
 $( document ).ready(function() {
     JPWP.routeEvent();
-    /**
-     * Date Format
-     * Converts UNIX Epoch time to DD.MM.YY
-     * 1343691442862 -> 31.07.12
-     * Usage: {{dateFormat yourDate}}
-     *
-     * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
-     * @license DWETFUW
-     */
-    Handlebars.registerHelper('dateFormat', function(context) {
-        var date = new Date(context),
-            day = date.getDate(),
-            month = date.getMonth() + 1,
-            year = String(date.getFullYear()).substr(2,3);
-        return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
-    });
+
 });
 
+/**
+ * Date Format
+ * Converts UNIX Epoch time to DD.MM.YY
+ * 1343691442862 -> 31.07.12
+ * Usage: {{dateFormat yourDate}}
+ *
+ * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
+ * @license DWETFUW
+ */
+Handlebars.registerHelper('dateFormat', function(context) {
+    var date = new Date(context),
+        day = date.getDate(),
+        month = date.getMonth() + 1,
+        year = String(date.getFullYear()).substr(2,3);
+    return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
+});
 
+/**
+ * Helper for listing categories
+ * @todo abstract for all terms
+ *
+ * @since 0.1.0
+ */
 Handlebars.registerHelper('categories', function(items, options) {
     var out = "Categories: <ul class='post-categories inline-list'>";
 
@@ -281,6 +369,8 @@ Handlebars.registerHelper('categories', function(items, options) {
     return out + "</ul>";
 });
 
+//run router on hash change (IE URL change)
 $(window).on('hashchange', JPWP.routeEvent);
 
+//intitialize foundation
 $(document).foundation();
