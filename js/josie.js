@@ -1,15 +1,15 @@
 /**
- * JPWP WordPress REST API Powered SPA
+ * Josie WordPress REST API Powered SPA
  *
  * @version 0.1.0
  *
  * @copyright 2014 Josh Pollock (Josh@JoshPress.net)
  * @license GNU General Public License v2+
- * @url https://github.com/Shelob9/jpwp-app
+ * @url https://github.com/Shelob9/Josie-app
  */
 
 jQuery( function () {
-    JPWP.init( paramsJPWP );
+    Josie.init( paramsJosie );
 } );
 
 (function ( $, app ) {
@@ -20,7 +20,7 @@ jQuery( function () {
      * @since 0.1.0
      */
     app.init = function( params ) {
-       app.params = params;
+        app.params = params;
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
     };
 
@@ -237,30 +237,26 @@ jQuery( function () {
     /**
      * Handles pagination.
      *
-     * @TODO Make suck less
+     * @TODO Check that we have more posts before doing next.
      *
      * @param current Current Page
      *
      * @since 0.1.0
      */
     app.pagination = function( current ) {
-
-
-       /*
-
-
-        */
         var currentPage = parseInt( current );
         var next = currentPage;
         next += 1;
         var html = '<ul class="pagination" role="menubar" aria-label="Pagination" id="pagination">';
 
-        html += '<li class="unavailable" aria-disabled="true"><a href="#page=' + next + '">&hellip;</a></li> <li class="arrow"><a href="">Next &raquo;</a></li>';
+        html += '<li class="arrow"><a href="#page=' + next + ' " title="Next Page">Next &raquo;</a></li>';
 
         if ( current > 1 ) {
             var previous = currentPage;
             previous -= 1;
-            html =+ '<li class="arrow unavailable" aria-disabled="true"><a href="#page='+previous+'">&laquo; Previous</a></li>';
+            html =+ '<li class="arrow unavailable" aria-disabled="true">' +
+            '<a href="#page=' + previous + '" title="Previous Page">&laquo; Previous</a>' +
+            '</li>';
 
         }
         html += '</div>';
@@ -272,7 +268,7 @@ jQuery( function () {
     /**
      * The menu items.
      *
-     * @requires The JPWP API Plugin be installed on source WP Site for the menus endpoint.
+     * @requires The Josie API Plugin be installed on source WP Site for the menus endpoint.
      *
      * @todo drop-down support?
      *
@@ -287,7 +283,7 @@ jQuery( function () {
         }
         $.ajax({
             type: 'GET',
-            url: app.params.rootURL + '/jpwp/menus/' + menuName,
+            url: app.params.rootURL + '/Josie/menus/' + menuName,
             dataType: 'json',
             success: function(items){
 
@@ -335,11 +331,11 @@ jQuery( function () {
     };
 
 
-})( jQuery, window.JPWP || ( window.JPWP = {} ) );
+})( jQuery, window.Josie || ( window.Josie = {} ) );
 
 
 $( document ).ready(function() {
-    JPWP.routeEvent();
+    Josie.routeEvent();
 
 });
 
@@ -379,7 +375,7 @@ Handlebars.registerHelper('categories', function(items, options) {
 });
 
 //run router on hash change (IE URL change)
-$(window).on('hashchange', JPWP.routeEvent);
+$(window).on('hashchange', Josie.routeEvent);
 
 //intitialize foundation
 $(document).foundation();
