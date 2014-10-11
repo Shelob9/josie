@@ -244,15 +244,24 @@ jQuery( function () {
      * @since 0.1.0
      */
     app.pagination = function( current ) {
+
+
+       /*
+
+
+        */
         var currentPage = parseInt( current );
         var next = currentPage;
         next += 1;
-        var html = '<div id="pagination">';
-        html += '<a href="#page='+next+'">Next Page</a>';
+        var html = '<ul class="pagination" role="menubar" aria-label="Pagination" id="pagination">';
+
+        html += '<li class="unavailable" aria-disabled="true"><a href="#page=' + next + '">&hellip;</a></li> <li class="arrow"><a href="">Next &raquo;</a></li>';
+
         if ( current > 1 ) {
             var previous = currentPage;
             previous -= 1;
-            html += '<a href="#page='+previous+'">Previous Page</a>';
+            html =+ '<li class="arrow unavailable" aria-disabled="true"><a href="#page='+previous+'">&laquo; Previous</a></li>';
+
         }
         html += '</div>';
 
