@@ -24,15 +24,21 @@ jQuery( function () {
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
         $(document).on ("click", "[josie=internal]", function ( event ) {
             event.preventDefault();
-            console.log( this );
 
             ID = $( this ).attr( 'data-id' );
+            slug = $(this).attr( 'href' );
+
             if ( $(this).hasClass( 'post-link' ) ) {
-                slug = $(this).attr( 'href' );
+
                 app.getSinglePost( ID );
-                history.pushState( null, null, document.url + slug );
+                history.pushState( null, null, slug );
             }
 
+            if ( $(this).hasClass( 'term-link' )  ) {
+                app.term( ID );
+                taxonomy = $(this).attr( 'taxonomy')
+                history.pushState( null, null, 'taxonomy/' + slug );
+            }
 
         });
 
@@ -62,45 +68,7 @@ jQuery( function () {
 
             app.getPosts( offset[1] );
         }
-        //handle taxonomy archives
-        else if ( hash.indexOf("taxonomy") > -1 ) {
-            if ( hash.indexOf("page") > -1 ) {
-                var offset = hash.split("page=");
-            }
-            else {
-                offset = 0;
-            }
-            var taxonomySplit = hash.split( 'taxonomy=');
-
-            if ( hash.indexOf( '&term=') > -1 ) {
-                var termSplit = hash.split( '&term=');
-
-                var term = termSplit[1];
-                var taxonomySplit2 = taxonomySplit[1].split( '&');
-                var taxonomy = taxonomySplit2[0];
-                if ( taxonomy == 'category' ) {
-                    taxonomy = 'category_name';
-                }
-
-            }else{
-                var term = 0;
-                var taxonomy = taxonomySplit[1];
-
-            }
-
-            if ( term == 0 ) {
-                app.listTerms( taxonomy );
-            }
-            else {
-                app.term( taxonomy, term, offset );
-
-            }
-
-        }
-        //single posts
-        else if ( hash > 0 ) {
-            app.getSinglePost( hash );
-        }
+        
 
 
     };
@@ -403,8 +371,16 @@ $( document ).ready(function() {
         var out = "Categories: <ul class='post-categories inline-list'>";
 
         for(var i=0, l=items.length; i<l; i++) {
-            var slug = items[i].slug;
-            out = out + "<li><a href='#taxonomy=category&term="+slug+"'>" + options.fn(items[i]) + "</a></li>";
+            slug = items[i].slug;
+            ID = items[i].term_id;
+            text = items[i].name;
+            titleText = 'Category ' + text;
+
+            out +=
+                new Handlebars.SafeString(
+                    "<a id='link-" + ID + "' href='category/" + slug + "' title='" + titleText  + "' class='term-link' josie='internal' data-id='" + ID + "' taxonomy='category'>" + text + "</a>"
+                );
+
 
         }
 
@@ -467,7 +443,7 @@ $( document ).ready(function() {
     });
 
     //run router on hash change (IE URL change)
-    //$(window).on('hashchange', Josie.routeEvent);
+    $(window).on('hashchange', Josie.routeEvent);
 
 
 

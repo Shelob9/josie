@@ -88,12 +88,10 @@
         </div>
         <div class="entry-content">{{{content}}}</div>
         <footer>
-                <span class="post-link">
-                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
-                </span>
+
                 <div class="post-categories">
                     {{#categories terms.category}}
-                        {{name}}
+                        {{{link this link name "term-link"}}}
                     {{/categories}}
                 </div>
         </footer>
@@ -113,7 +111,7 @@
         </header>
 
         <div class="entry-content">{{{description}}}</div>
-        <p><a href="#taxonomy={{taxonomy}}&term={{slug}}">See Items</a></p>
+        <p><a href="{{taxonomy}}/{{slug}}">See Items</a></p>
         <footer>
 
         </footer>
