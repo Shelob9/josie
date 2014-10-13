@@ -57,7 +57,7 @@
 
     <article id="post-preview-{{ID}}" data-id="{{ID}}" class="post-preview post-{{ID}}">
         <header>
-            <h3 class="post-title">{{title}}</h3>
+            <h3 class="post-title">{{{link this link }}}</h3>
             <div class="entry-meta">
                 <p>By: {{author.name}} on {{dateFormat date}}</p>
             </div>
@@ -68,9 +68,8 @@
         <div class="entry-excerpt">{{{excerpt}}}</div>
         <footer>
                 <span class="post-link">
-                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
+                    {{{link this link "Read"}}}
                 </span>
-
         </footer>
     </article>
 </script>
@@ -130,6 +129,7 @@
 <script type="text/javascript">
         var params = {
             rootURL : 'http://local.wordpress.dev/wp-json',
+            siteURL : 'http://local.wordpress.dev/',
             siteTitle: 'Josie',
             postsPerPage: 10,
             mainContainer: '#main',
@@ -138,6 +138,7 @@
 
         };
         window.paramsJosie = params;
+
 </script>
 
 

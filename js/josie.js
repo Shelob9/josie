@@ -22,6 +22,21 @@ jQuery( function () {
     app.init = function( params ) {
         app.params = params;
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
+        $(document).on ("click", "[josie=internal]", function ( event ) {
+            event.preventDefault();
+            console.log( this );
+
+            ID = $( this ).attr( 'data-id' );
+            if ( $(this).hasClass( 'post-link' ) ) {
+                slug = $(this).attr( 'href' );
+                app.getSinglePost( ID );
+                history.pushState( null, null, document.url + slug );
+            }
+
+
+        });
+
+
     };
 
     /**
@@ -86,6 +101,8 @@ jQuery( function () {
         else if ( hash > 0 ) {
             app.getSinglePost( hash );
         }
+
+
     };
 
     /**
@@ -115,6 +132,7 @@ jQuery( function () {
                 app.emptyContainer();
                 $(app.params.mainContainer).fadeIn();
                 $.each( posts, function(index, post) {
+
                     var source = $('#posts').html();
                     var template = Handlebars.compile(source);
                     var html = template(post);
@@ -177,8 +195,6 @@ jQuery( function () {
             url: app.params.rootURL + '/taxonomies/' + taxonomy + '/terms',
             dataType: 'json',
             success: function(terms){
-                console.log( terms );
-
 
                 $.each( terms, function(index, term) {
                     app.emptyContainer();
@@ -206,7 +222,7 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.term =function( taxonomy, slug, offset ) {
+    app.term = function( taxonomy, slug, offset ) {
         $.ajax({
             type: 'GET',
             url: app.params.rootURL + '/posts?filter[' + taxonomy + ']=' + slug,
@@ -322,6 +338,27 @@ jQuery( function () {
     };
 
     /**
+     * Get URL Params
+     *
+     * @source http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+     *
+     * @param sParam
+     * @returns {*}
+     * @constructor
+     */
+    app.urlParams = function( sParam ) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return sParameterName[1];
+            }
+        }
+
+    },
+
+    /**
      * Empty main container
      *
      * @todo Make animation not suck.
@@ -339,45 +376,114 @@ jQuery( function () {
 $( document ).ready(function() {
     Josie.routeEvent();
 
-});
+    /**
+     * Date Format
+     * Converts UNIX Epoch time to DD.MM.YY
+     * 1343691442862 -> 31.07.12
+     * Usage: {{dateFormat yourDate}}
+     *
+     * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
+     * @license DWETFUW
+     */
+    Handlebars.registerHelper('dateFormat', function(context) {
+        var date = new Date(context),
+            day = date.getDate(),
+            month = date.getMonth() + 1,
+            year = String(date.getFullYear()).substr(2,3);
+        return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
+    });
 
-/**
- * Date Format
- * Converts UNIX Epoch time to DD.MM.YY
- * 1343691442862 -> 31.07.12
- * Usage: {{dateFormat yourDate}}
- *
- * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
- * @license DWETFUW
- */
-Handlebars.registerHelper('dateFormat', function(context) {
-    var date = new Date(context),
-        day = date.getDate(),
-        month = date.getMonth() + 1,
-        year = String(date.getFullYear()).substr(2,3);
-    return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
-});
+    /**
+     * Helper for listing categories
+     * @todo abstract for all terms
+     *
+     * @since 0.1.0
+     */
+    Handlebars.registerHelper('categories', function(items, options) {
+        var out = "Categories: <ul class='post-categories inline-list'>";
 
-/**
- * Helper for listing categories
- * @todo abstract for all terms
- *
- * @since 0.1.0
- */
-Handlebars.registerHelper('categories', function(items, options) {
-    var out = "Categories: <ul class='post-categories inline-list'>";
+        for(var i=0, l=items.length; i<l; i++) {
+            var slug = items[i].slug;
+            out = out + "<li><a href='#taxonomy=category&term="+slug+"'>" + options.fn(items[i]) + "</a></li>";
 
-    for(var i=0, l=items.length; i<l; i++) {
-        var slug = items[i].slug;
-        out = out + "<li><a href='#taxonomy=category&term="+slug+"'>" + options.fn(items[i]) + "</a></li>";
+        }
 
+        return out + "</ul>";
+    });
+
+
+    /**
+     * Handlbars Helper for internal links
+     *
+     * Usage {{link this url link text linkClass}}
+     *
+     * All params optional except object
+     *
+     * Set linkClass to 'term-link' when using for taxonomy link
+     *
+     */
+    Handlebars.registerHelper('link', function( object, url, text, linkClass ) {
+
+        if ( undefined == url || '' === url || 'object' == typeof( url ) || 'array' == typeof( url ) ) {
+            url = object.link;
+        }
+
+        url = Handlebars.escapeExpression(url);
+
+        if ( undefined === text || '' === text || 'object' == typeof( text ) || 'array' == typeof( text ) ) {
+            text = object.title;
+        }
+
+        text = Handlebars.escapeExpression(text);
+
+        siteURL = stripTrailingSlash( paramsJosie.siteURL );
+        url = url.split( siteURL );
+        url = url[1];
+        url = stripTrailingSlash( url );
+        url = url.split( '/');
+        url = url[1];
+
+
+        ID = object.ID;
+        ID = Handlebars.escapeExpression( ID );
+
+        if ( undefined === linkClass || '' === linkClass || 'object' == typeof( linkClass )  || 'array' == typeof( linkClass ) ) {
+            linkClass = 'post-link';
+        }
+
+        linkClass = Handlebars.escapeExpression( linkClass );
+
+        ID = Handlebars.escapeExpression( ID );
+
+        titleText = "Read";
+        if ( object.title ) {
+            titleText = object.title;
+        }
+
+        return new Handlebars.SafeString(
+            "<a id='link-" + ID + "' href='" + url + "' title='" + titleText  + "' class='" + linkClass + "' josie='internal' data-id='" + ID + "'>" + text + "</a>"
+        );
+
+    });
+
+    //run router on hash change (IE URL change)
+    //$(window).on('hashchange', Josie.routeEvent);
+
+
+
+    //intitialize foundation
+    $(document).foundation();
+
+    function stripTrailingSlash(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
     }
 
-    return out + "</ul>";
+
+
+
+
 });
 
-//run router on hash change (IE URL change)
-$(window).on('hashchange', Josie.routeEvent);
-
-//intitialize foundation
-$(document).foundation();
