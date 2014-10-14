@@ -59,8 +59,8 @@ jQuery( function () {
         var url = document.URL;
         var urlLast = app.lastSegment( url );
         var protocolSplit = url.split( '//');
-
-        if ( 'index.html' === app.stripTrailingSlash(urlLast ) || app.stripTrailingSlash( urlLast ) === app.stripTrailingSlash( protocolSplit[1]) ) {
+        
+        if ( 'index.html' === app.stripTrailingSlash(urlLast ) || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] ) || app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] )  )  ) {
 
             if ( '' == hash || hash == '#' || hash == 'page=1') {
                 app.getPosts( 0 );
