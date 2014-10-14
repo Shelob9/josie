@@ -59,7 +59,7 @@ jQuery( function () {
         var url = document.URL;
         var urlLast = app.lastSegment( url );
         var protocolSplit = url.split( '//');
-        
+
         if ( 'index.html' === app.stripTrailingSlash(urlLast ) || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] ) || app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] )  )  ) {
 
             if ( '' == hash || hash == '#' || hash == 'page=1') {
@@ -297,13 +297,14 @@ jQuery( function () {
                     if ( item.object == 'post' || item.object == 'page') {
                         $(menuContainer).append(
                             '<li>' +
-                                '<a href="#' + item.ID + '">' + item.title + '</a>' +
+                                app.link( item.ID, item.url, item.title, 'post-link', item.title ) +
                             '</li>'
                         );
                     } else if ( item.object == 'category' || item.object == 'tag' ) {
+                        console.log( item );
                         $(menuContainer).append(
                             '<li>' +
-                             '<a href="#taxonomy=' + item.object + '&term=' + item.title + '">' + item.title + '</a>' +
+                                app.link( item.ID, item.url, item.title, 'term-link', item.title ) +
                             '</li>'
                         );
                     }
@@ -357,6 +358,10 @@ jQuery( function () {
         $( app.params.mainContainer).fadeOut().empty();
     };
 
+    app.link = function( ID, url, titleText, linkClass, text ) {
+       return  "<a id='link-" + ID + "' href='" + url + "' title='" + titleText  + "' class='" + linkClass + "' josie='internal' data-id='" + ID + "'>" + text + "</a>";
+    };
+
     app.lastSegment = function (url) {
         var strippedURL = app.stripTrailingSlash(url);
         return strippedURL.split('/').pop();
@@ -406,23 +411,20 @@ $( document ).ready(function() {
     Handlebars.registerHelper('categories', function(items, options) {
         if ( undefined !== items  && items.length > 0 ) {
             var out = "Categories: <ul class='post-categories inline-list'>";
-
+            var linkClass = 'term-link';
             for (var i = 0, l = items.length; i < l; i++) {
                 slug = items[i].slug;
                 ID = items[i].term_id;
                 text = items[i].name;
                 titleText = 'Category ' + text;
 
-                out +=
-                    new Handlebars.SafeString(
-                        "<a id='link-" + ID + "' href='category/" + slug + "' title='" + titleText + "' class='term-link' josie='internal' data-id='" + ID + "' taxonomy='category'>" + text + "</a>"
-                    );
-
+                out += new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
 
             }
 
             return out + "</ul>";
         }
+
     });
 
 
@@ -474,9 +476,7 @@ $( document ).ready(function() {
             titleText = object.title;
         }
 
-        return new Handlebars.SafeString(
-            "<a id='link-" + ID + "' href='" + url + "' title='" + titleText  + "' class='" + linkClass + "' josie='internal' data-id='" + ID + "'>" + text + "</a>"
-        );
+        return new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
 
     });
 
