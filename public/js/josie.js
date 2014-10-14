@@ -422,6 +422,7 @@ $( document ).ready(function() {
                 ID = items[i].term_id;
                 text = items[i].name;
                 titleText = 'Category ' + text;
+                url = items[i].link;
 
                 out += new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
 
