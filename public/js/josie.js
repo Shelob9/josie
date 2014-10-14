@@ -46,9 +46,7 @@ jQuery( function () {
     };
 
     /**
-     * Handles routing based on URL Hash
-     *
-     * @TODO Find someone who can't even deal with the bad SEO of this to implement push-states or something.
+     * Handles routing based on URL
      *
      * @since 0.1.0
      */
@@ -60,9 +58,16 @@ jQuery( function () {
         var urlLast = app.lastSegment( url );
         var protocolSplit = url.split( '//');
 
-        if ( 'index.html' === app.stripTrailingSlash(urlLast ) || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] ) || app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] )  )  ) {
+        if (
+            'index.html' === app.stripTrailingSlash(urlLast )
+            || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] )
+            //|| app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] ) )
+            || hash.indexOf("page") > -1
+        ) {
+
 
             if ( '' == hash || hash == '#' || hash == 'page=1') {
+
                 app.getPosts( 0 );
                 app.pagination( 1 );
             }
