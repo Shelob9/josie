@@ -26,18 +26,19 @@ jQuery( function () {
             event.preventDefault();
 
             ID = $( this ).attr( 'data-id' );
-            slug = $(this).attr( 'href' );
+            href = $(this).attr( 'href' );
+            href = href.split( app.params.siteURL );
+            href = href[1];
 
             if ( $(this).hasClass( 'post-link' ) ) {
-
                 app.getSinglePost( ID );
-                history.pushState( null, null, slug );
+                history.pushState( null, null, href );
             }
 
             if ( $(this).hasClass( 'term-link' )  ) {
                 app.term( ID );
                 taxonomy = $(this).attr( 'taxonomy');
-                history.pushState( null, null, 'taxonomy/' + slug );
+                history.pushState( null, null,  href );
             }
 
         });
@@ -120,7 +121,6 @@ jQuery( function () {
                 app.emptyContainer();
                 $(app.params.mainContainer).fadeIn();
                 $.each( posts, function(index, post) {
-
                     var source = $('#posts').html();
                     var template = Handlebars.compile(source);
                     var html = template(post);
@@ -457,14 +457,14 @@ $( document ).ready(function() {
         }
 
         text = Handlebars.escapeExpression(text);
-
+/*
         siteURL = stripTrailingSlash( paramsJosie.siteURL );
         url = url.split( siteURL );
         url = url[1];
         url = stripTrailingSlash( url );
         url = url.split( '/');
         url = url[1];
-
+*/
 
         ID = object.ID;
         ID = Handlebars.escapeExpression( ID );
