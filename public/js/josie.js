@@ -36,7 +36,7 @@ jQuery( function () {
 
             if ( $(this).hasClass( 'term-link' )  ) {
                 app.term( ID );
-                taxonomy = $(this).attr( 'taxonomy')
+                taxonomy = $(this).attr( 'taxonomy');
                 history.pushState( null, null, 'taxonomy/' + slug );
             }
 
@@ -56,19 +56,34 @@ jQuery( function () {
 
         var hash = window.location.hash.replace(/^.*?#/,'');
 
-        //@TODO Static front-page options!
-        //show posts if not hash
-        if ( hash == '' || hash == '#' || hash == 'page=1') {
-            app.getPosts( 0 );
-            app.pagination( 1 );
-        }
-        //paginate posts
-        else if ( hash.indexOf("page") > -1 ) {
-            var offset = hash.split("page=");
+        var url = document.URL;
+        var urlLast = app.lastSegment( url );
+        var protocolSplit = url.split( '//');
 
-            app.getPosts( offset[1] );
+        if ( 'index.html' === app.stripTrailingSlash(urlLast ) || app.stripTrailingSlash( urlLast ) === app.stripTrailingSlash( protocolSplit[1]) ) {
+
+            if ( '' == hash || hash == '#' || hash == 'page=1') {
+                app.getPosts( 0 );
+                app.pagination( 1 );
+            }
+            //paginate posts
+            else if ( hash.indexOf("page") > -1 ) {
+                var offset = hash.split("page=");
+
+                app.getPosts( offset[1] );
+            }
         }
-        
+        else {
+
+            if ( url.indexOf("taxonomy") > -1 ) {
+                console.log( url.indexOf( 'taxonomy') );
+            }
+            else {
+
+                app.getSinglePost(  '', urlLast );
+            }
+        }
+
 
 
     };
@@ -126,11 +141,16 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.getSinglePost = function( ID ) {
-
+    app.getSinglePost = function( ID, slug ) {
+        if ( undefined !== slug ) {
+            url = app.params.rootURL + '/posts?filter[name]=' + slug;
+        }
+        else {
+            url = app.params.rootURL + '/posts/' + ID;
+        }
         $.ajax({
             type: 'GET',
-            url: app.params.rootURL + '/posts/' + ID,
+            url: url,
             dataType: 'json',
             success: function(post) {
 
@@ -337,11 +357,27 @@ jQuery( function () {
         $( app.params.mainContainer).fadeOut().empty();
     };
 
+    app.lastSegment = function (url) {
+        var strippedURL = app.stripTrailingSlash(url);
+        return strippedURL.split('/').pop();
+    };
+
+    app.stripTrailingSlash = function(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
+    };
+
 
 })( jQuery, window.Josie || ( window.Josie = {} ) );
 
 
 $( document ).ready(function() {
+    //run router on hash change (IE URL change)
+    $(window).on('hashchange', Josie.routeEvent);
+
+    //route on load
     Josie.routeEvent();
 
     /**
@@ -368,23 +404,25 @@ $( document ).ready(function() {
      * @since 0.1.0
      */
     Handlebars.registerHelper('categories', function(items, options) {
-        var out = "Categories: <ul class='post-categories inline-list'>";
+        if ( undefined !== items  && items.length > 0 ) {
+            var out = "Categories: <ul class='post-categories inline-list'>";
 
-        for(var i=0, l=items.length; i<l; i++) {
-            slug = items[i].slug;
-            ID = items[i].term_id;
-            text = items[i].name;
-            titleText = 'Category ' + text;
+            for (var i = 0, l = items.length; i < l; i++) {
+                slug = items[i].slug;
+                ID = items[i].term_id;
+                text = items[i].name;
+                titleText = 'Category ' + text;
 
-            out +=
-                new Handlebars.SafeString(
-                    "<a id='link-" + ID + "' href='category/" + slug + "' title='" + titleText  + "' class='term-link' josie='internal' data-id='" + ID + "' taxonomy='category'>" + text + "</a>"
-                );
+                out +=
+                    new Handlebars.SafeString(
+                        "<a id='link-" + ID + "' href='category/" + slug + "' title='" + titleText + "' class='term-link' josie='internal' data-id='" + ID + "' taxonomy='category'>" + text + "</a>"
+                    );
 
 
+            }
+
+            return out + "</ul>";
         }
-
-        return out + "</ul>";
     });
 
 
@@ -441,11 +479,6 @@ $( document ).ready(function() {
         );
 
     });
-
-    //run router on hash change (IE URL change)
-    $(window).on('hashchange', Josie.routeEvent);
-
-
 
     //intitialize foundation
     $(document).foundation();
