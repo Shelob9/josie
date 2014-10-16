@@ -2,7 +2,7 @@ var express = require('express');
 
 var server = express();
 server.use(express.static(__dirname + '/public'));
-server.use('/js', express.static(__dirname + '/public/js'));
+server.use(__dirname +'/js', express.static(__dirname + '/public/js'));
 server.use('/img', express.static(__dirname + '/public/img'));
 server.use('/css', express.static(__dirname + '/public/css'));
 //server.use('/partials', express.static(__dirname + '/public/partials'));
