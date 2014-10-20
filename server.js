@@ -1,12 +1,9 @@
 var express = require('express');
+var path = require('path');
 
 var server = express();
 server.use(express.static(__dirname + '/public'));
-server.use(__dirname +'/js', express.static(__dirname + '/public/js'));
-server.use('/img', express.static(__dirname + '/public/img'));
-server.use('/css', express.static(__dirname + '/public/css'));
-//server.use('/partials', express.static(__dirname + '/public/partials'));
-//server.use('/templates', express.static(__dirname + '/public/templates'));
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('*', function(req, res){
     res.sendFile(__dirname + '/public/index.html');
