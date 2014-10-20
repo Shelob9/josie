@@ -159,6 +159,10 @@ jQuery( function () {
             dataType: 'json',
             success: function(post) {
 
+                if ( post.hasOwnProperty(0) ) {
+                    post = post[0];
+                }
+
                 app.emptyContainer();
                 var source = $('#post').html();
                 var template = Handlebars.compile(source);
