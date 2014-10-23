@@ -62,10 +62,12 @@
                 <p>By: {{author.name}} on {{dateFormat date}}</p>
             </div>
         </header>
-        <div class="featured-image">
+        <div class="row">
+            <div class="featured-image small-3 columns">
             <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+            </div>
+            <div class="entry-excerpt small-9 columns">{{{excerpt}}}</div>
         </div>
-        <div class="entry-excerpt">{{{excerpt}}}</div>
         <footer>
                 <span class="post-link">
                     {{{link this link "Read"}}}
@@ -77,15 +79,16 @@
 <script id="post" type="text/x-handlebars-template">
 
     <article id="post-{{ID}}" data-id="{{ID}}" class="post post-{{ID}}">
+        <div class="featured-image">
+            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+        </div>
         <header>
             <h3 class="post-title">{{title}}</h3>
             <div class="entry-meta">
                 <p>By: {{author.name}} on {{dateFormat date}}</p>
             </div>
         </header>
-        <div class="featured-image">
-            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
-        </div>
+
         <div class="entry-content">{{{content}}}</div>
         <footer>
 
