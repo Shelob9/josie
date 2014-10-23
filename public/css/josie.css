@@ -1,0 +1,11 @@
+#main-menu {
+    list-style: none;
+}
+
+.post .featured-image img {
+    width:100%;
+}
+
+article header, article .entry-content, article .entry-excerpt, article footer {
+    padding: 1%;
+}

@@ -22,12 +22,32 @@ jQuery( function () {
     app.init = function( params ) {
         app.params = params;
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
+        $(document).on ("click", "[josie=internal]", function ( event ) {
+            event.preventDefault();
+
+            ID = $( this ).attr( 'data-id' );
+            href = $(this).attr( 'href' );
+            href = href.split( app.params.siteURL );
+            href = href[1];
+
+            if ( $(this).hasClass( 'post-link' ) ) {
+                app.getSinglePost( ID );
+                history.pushState( null, null, href );
+            }
+
+            if ( $(this).hasClass( 'term-link' )  ) {
+                app.term( ID );
+                taxonomy = $(this).attr( 'taxonomy');
+                history.pushState( null, null,  href );
+            }
+
+        });
+
+
     };
 
     /**
-     * Handles routing based on URL Hash
-     *
-     * @TODO Find someone who can't even deal with the bad SEO of this to implement push-states or something.
+     * Handles routing based on URL
      *
      * @since 0.1.0
      */
@@ -35,57 +55,43 @@ jQuery( function () {
 
         var hash = window.location.hash.replace(/^.*?#/,'');
 
-        //@TODO Static front-page options!
-        //show posts if not hash
-        if ( hash == '' || hash == '#' || hash == 'page=1') {
-            app.getPosts( 0 );
-            app.pagination( 1 );
-        }
-        //paginate posts
-        else if ( hash.indexOf("page") > -1 ) {
-            var offset = hash.split("page=");
+        var url = document.URL;
+        var urlLast = app.lastSegment( url );
+        var protocolSplit = url.split( '//');
 
-            app.getPosts( offset[1] );
-        }
-        //handle taxonomy archives
-        else if ( hash.indexOf("taxonomy") > -1 ) {
-            if ( hash.indexOf("page") > -1 ) {
+        if (
+            'index.html' === app.stripTrailingSlash(urlLast )
+            || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] )
+            //|| app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] ) )
+            || hash.indexOf("page") > -1
+        ) {
+
+
+            if ( '' == hash || hash == '#' || hash == 'page=1') {
+
+                app.getPosts( 0 );
+                app.pagination( 1 );
+            }
+            //paginate posts
+            else if ( hash.indexOf("page") > -1 ) {
                 var offset = hash.split("page=");
+
+                app.getPosts( offset[1] );
+            }
+        }
+        else {
+
+            if ( url.indexOf("taxonomy") > -1 ) {
+                console.log( url.indexOf( 'taxonomy') );
             }
             else {
-                offset = 0;
+
+                app.getSinglePost(  '', urlLast );
             }
-            var taxonomySplit = hash.split( 'taxonomy=');
-
-            if ( hash.indexOf( '&term=') > -1 ) {
-                var termSplit = hash.split( '&term=');
-
-                var term = termSplit[1];
-                var taxonomySplit2 = taxonomySplit[1].split( '&');
-                var taxonomy = taxonomySplit2[0];
-                if ( taxonomy == 'category' ) {
-                    taxonomy = 'category_name';
-                }
-
-            }else{
-                var term = 0;
-                var taxonomy = taxonomySplit[1];
-
-            }
-
-            if ( term == 0 ) {
-                app.listTerms( taxonomy );
-            }
-            else {
-                app.term( taxonomy, term, offset );
-
-            }
-
         }
-        //single posts
-        else if ( hash > 0 ) {
-            app.getSinglePost( hash );
-        }
+
+
+
     };
 
     /**
@@ -140,13 +146,22 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.getSinglePost = function( ID ) {
-
+    app.getSinglePost = function( ID, slug ) {
+        if ( undefined !== slug ) {
+            url = app.params.rootURL + '/posts?filter[name]=' + slug;
+        }
+        else {
+            url = app.params.rootURL + '/posts/' + ID;
+        }
         $.ajax({
             type: 'GET',
-            url: app.params.rootURL + '/posts/' + ID,
+            url: url,
             dataType: 'json',
             success: function(post) {
+
+                if ( post.hasOwnProperty(0) ) {
+                    post = post[0];
+                }
 
                 app.emptyContainer();
                 var source = $('#post').html();
@@ -177,8 +192,6 @@ jQuery( function () {
             url: app.params.rootURL + '/taxonomies/' + taxonomy + '/terms',
             dataType: 'json',
             success: function(terms){
-                console.log( terms );
-
 
                 $.each( terms, function(index, term) {
                     app.emptyContainer();
@@ -206,7 +219,7 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.term =function( taxonomy, slug, offset ) {
+    app.term = function( taxonomy, slug, offset ) {
         $.ajax({
             type: 'GET',
             url: app.params.rootURL + '/posts?filter[' + taxonomy + ']=' + slug,
@@ -293,13 +306,14 @@ jQuery( function () {
                     if ( item.object == 'post' || item.object == 'page') {
                         $(menuContainer).append(
                             '<li>' +
-                                '<a href="#' + item.ID + '">' + item.title + '</a>' +
+                                app.link( item.ID, item.url, item.title, 'post-link', item.title ) +
                             '</li>'
                         );
                     } else if ( item.object == 'category' || item.object == 'tag' ) {
+                        console.log( item );
                         $(menuContainer).append(
                             '<li>' +
-                             '<a href="#taxonomy=' + item.object + '&term=' + item.title + '">' + item.title + '</a>' +
+                                app.link( item.ID, item.url, item.title, 'term-link', item.title ) +
                             '</li>'
                         );
                     }
@@ -322,6 +336,27 @@ jQuery( function () {
     };
 
     /**
+     * Get URL Params
+     *
+     * @source http://www.jquerybyexample.net/2012/06/get-url-parameters-using-jquery.html
+     *
+     * @param sParam
+     * @returns {*}
+     * @constructor
+     */
+    app.urlParams = function( sParam ) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return sParameterName[1];
+            }
+        }
+
+    },
+
+    /**
      * Empty main container
      *
      * @todo Make animation not suck.
@@ -332,52 +367,144 @@ jQuery( function () {
         $( app.params.mainContainer).fadeOut().empty();
     };
 
+    app.link = function( ID, url, titleText, linkClass, text ) {
+       return  "<a id='link-" + ID + "' href='" + url + "' title='" + titleText  + "' class='" + linkClass + "' josie='internal' data-id='" + ID + "'>" + text + "</a>";
+    };
+
+    app.lastSegment = function (url) {
+        var strippedURL = app.stripTrailingSlash(url);
+        return strippedURL.split('/').pop();
+    };
+
+    app.stripTrailingSlash = function(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
+    };
+
 
 })( jQuery, window.Josie || ( window.Josie = {} ) );
 
 
 $( document ).ready(function() {
+    //run router on hash change (IE URL change)
+    $(window).on('hashchange', Josie.routeEvent);
+
+    //route on load
     Josie.routeEvent();
 
-});
+    /**
+     * Date Format
+     * Converts UNIX Epoch time to DD.MM.YY
+     * 1343691442862 -> 31.07.12
+     * Usage: {{dateFormat yourDate}}
+     *
+     * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
+     * @license DWETFUW
+     */
+    Handlebars.registerHelper('dateFormat', function(context) {
+        var date = new Date(context),
+            day = date.getDate(),
+            month = date.getMonth() + 1,
+            year = String(date.getFullYear()).substr(2,3);
+        return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
+    });
 
-/**
- * Date Format
- * Converts UNIX Epoch time to DD.MM.YY
- * 1343691442862 -> 31.07.12
- * Usage: {{dateFormat yourDate}}
- *
- * @source https://github.com/clintioo/handlebars-date-helpers/blob/master/handlebars-helpers.1.0.0.js
- * @license DWETFUW
- */
-Handlebars.registerHelper('dateFormat', function(context) {
-    var date = new Date(context),
-        day = date.getDate(),
-        month = date.getMonth() + 1,
-        year = String(date.getFullYear()).substr(2,3);
-    return (day < 10 ? '0' : '') + day + '.' + (month < 10 ? '0' : '') + month + '.' + year;
-});
+    /**
+     * Helper for listing categories
+     * @todo abstract for all terms
+     *
+     * @since 0.1.0
+     */
+    Handlebars.registerHelper('categories', function(items, options) {
+        if ( undefined !== items  && items.length > 0 ) {
+            var out = "Categories: <ul class='post-categories inline-list'>";
+            var linkClass = 'term-link';
+            for (var i = 0, l = items.length; i < l; i++) {
+                slug = items[i].slug;
+                ID = items[i].term_id;
+                text = items[i].name;
+                titleText = 'Category ' + text;
+                url = items[i].link;
 
-/**
- * Helper for listing categories
- * @todo abstract for all terms
- *
- * @since 0.1.0
- */
-Handlebars.registerHelper('categories', function(items, options) {
-    var out = "Categories: <ul class='post-categories inline-list'>";
+                out += '<li>';
+                out += new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
+                out += '</li>';
 
-    for(var i=0, l=items.length; i<l; i++) {
-        var slug = items[i].slug;
-        out = out + "<li><a href='#taxonomy=category&term="+slug+"'>" + options.fn(items[i]) + "</a></li>";
+            }
 
+            return out + "</ul>";
+        }
+
+    });
+
+
+    /**
+     * Handlbars Helper for internal links
+     *
+     * Usage {{link this url link text linkClass}}
+     *
+     * All params optional except object
+     *
+     * Set linkClass to 'term-link' when using for taxonomy link
+     *
+     */
+    Handlebars.registerHelper('link', function( object, url, text, linkClass ) {
+
+        if ( undefined == url || '' === url || 'object' == typeof( url ) || 'array' == typeof( url ) ) {
+            url = object.link;
+        }
+
+        url = Handlebars.escapeExpression(url);
+
+        if ( undefined === text || '' === text || 'object' == typeof( text ) || 'array' == typeof( text ) ) {
+            text = object.title;
+        }
+
+        text = Handlebars.escapeExpression(text);
+/*
+        siteURL = stripTrailingSlash( paramsJosie.siteURL );
+        url = url.split( siteURL );
+        url = url[1];
+        url = stripTrailingSlash( url );
+        url = url.split( '/');
+        url = url[1];
+*/
+
+        ID = object.ID;
+        ID = Handlebars.escapeExpression( ID );
+
+        if ( undefined === linkClass || '' === linkClass || 'object' == typeof( linkClass )  || 'array' == typeof( linkClass ) ) {
+            linkClass = 'post-link';
+        }
+
+        linkClass = Handlebars.escapeExpression( linkClass );
+
+        ID = Handlebars.escapeExpression( ID );
+
+        titleText = "Read";
+        if ( object.title ) {
+            titleText = object.title;
+        }
+
+        return new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
+
+    });
+
+    //intitialize foundation
+    $(document).foundation();
+
+    function stripTrailingSlash(str) {
+        if (str.substr(-1) == '/') {
+            return str.substr(0, str.length - 1);
+        }
+        return str;
     }
 
-    return out + "</ul>";
+
+
+
+
 });
 
-//run router on hash change (IE URL change)
-$(window).on('hashchange', Josie.routeEvent);
-
-//intitialize foundation
-$(document).foundation();

@@ -8,10 +8,10 @@
     <title>Josie</title>
     <meta name="description" content="">
 
-    <script src="js/lib/modernizr.js"></script>
-    <link rel="stylesheet" href="css/lib/normalize.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="css/lib/foundation.min.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="css/josie.css" type="text/css" media="all" />
+    <script src="/js/lib/modernizr.js"></script>
+    <link rel="stylesheet" href="/css/lib/normalize.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/lib/foundation.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/css/josie.css" type="text/css" media="all" />
 
 </head>
 <body>
@@ -27,8 +27,8 @@
                 <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
             </section>
 
-            <section class="middle tab-bar-section">
-                <a href="index.html">Josie</a>
+            <section class="middle tab-bar-section title-section">
+                <h1 class="page-title"><a href="/">Josie</a></h1>
             </section>
 
 
@@ -57,20 +57,21 @@
 
     <article id="post-preview-{{ID}}" data-id="{{ID}}" class="post-preview post-{{ID}}">
         <header>
-            <h3 class="post-title">{{title}}</h3>
+            <h3 class="post-title">{{{link this link }}}</h3>
             <div class="entry-meta">
                 <p>By: {{author.name}} on {{dateFormat date}}</p>
             </div>
         </header>
-        <div class="featured-image">
+        <div class="row">
+            <div class="featured-image small-3 columns">
             <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+            </div>
+            <div class="entry-excerpt small-9 columns">{{{excerpt}}}</div>
         </div>
-        <div class="entry-excerpt">{{{excerpt}}}</div>
         <footer>
                 <span class="post-link">
-                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
+                    {{{link this link "Read"}}}
                 </span>
-
         </footer>
     </article>
 </script>
@@ -78,23 +79,22 @@
 <script id="post" type="text/x-handlebars-template">
 
     <article id="post-{{ID}}" data-id="{{ID}}" class="post post-{{ID}}">
+        <div class="featured-image">
+            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
+        </div>
         <header>
             <h3 class="post-title">{{title}}</h3>
             <div class="entry-meta">
                 <p>By: {{author.name}} on {{dateFormat date}}</p>
             </div>
         </header>
-        <div class="featured-image">
-            <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
-        </div>
+
         <div class="entry-content">{{{content}}}</div>
         <footer>
-                <span class="post-link">
-                    <a  href="#{{ID}}" data-id="{{ID}}">Read</a>
-                </span>
+
                 <div class="post-categories">
                     {{#categories terms.category}}
-                        {{name}}
+                        {{{link this link name "term-link"}}}
                     {{/categories}}
                 </div>
         </footer>
@@ -114,22 +114,23 @@
         </header>
 
         <div class="entry-content">{{{description}}}</div>
-        <p><a href="#taxonomy={{taxonomy}}&term={{slug}}">See Items</a></p>
+        <p><a href="{{taxonomy}}/{{slug}}">See Items</a></p>
         <footer>
 
         </footer>
     </article>
 </script>
 
-<script type="text/javascript" src="js/lib/jquery.js"></script>
-<script type="text/javascript" src="js/lib/fastclick.js"></script>
-<script type="text/javascript" src="js/lib/foundation.min.js"></script>
-<script type="text/javascript" src="js/lib/handlebars.js"></script>
-<script type="text/javascript" src="js/josie.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.js"></script>
+<script type="text/javascript" src="/js/lib/fastclick.js"></script>
+<script type="text/javascript" src="/js/lib/foundation.min.js"></script>
+<script type="text/javascript" src="/js/lib/handlebars.js"></script>
+<script type="text/javascript" src="/js/josie.js"></script>
 <!--Initialization for Josie App-->
 <script type="text/javascript">
         var params = {
-            rootURL : 'http://local.wordpress.dev/wp-json',
+            rootURL : 'http://joshpress.net/wp-json',
+            siteURL : 'http://joshpress.net/',
             siteTitle: 'Josie',
             postsPerPage: 10,
             mainContainer: '#main',
@@ -138,6 +139,7 @@
 
         };
         window.paramsJosie = params;
+
 </script>
 
 
