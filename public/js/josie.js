@@ -428,7 +428,9 @@ $( document ).ready(function() {
                 titleText = 'Category ' + text;
                 url = items[i].link;
 
+                out += '<li>';
                 out += new Handlebars.SafeString( Josie.link( ID, url, titleText, linkClass, text ) );
+                out += '</li>';
 
             }
 
