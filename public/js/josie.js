@@ -310,7 +310,6 @@ jQuery( function () {
                             '</li>'
                         );
                     } else if ( item.object == 'category' || item.object == 'tag' ) {
-                        console.log( item );
                         $(menuContainer).append(
                             '<li>' +
                                 app.link( item.ID, item.url, item.title, 'term-link', item.title ) +
