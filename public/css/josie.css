@@ -9,3 +9,7 @@
 article header, article .entry-content, article .entry-excerpt, article footer {
     padding: 1%;
 }
+
+.row {
+    width: 100%;
+}

@@ -55,7 +55,7 @@
 <!--template for multiple posts-->
 <script id="posts" type="text/x-handlebars-template">
 
-    <article id="post-preview-{{ID}}" data-id="{{ID}}" class="post-preview post-{{ID}}">
+    <article id="post-preview-{{ID}}" data-id="{{ID}}" class="post-preview post-{{ID}} row">
         <header>
             <h3 class="post-title">{{{link this link }}}</h3>
             <div class="entry-meta">
@@ -78,7 +78,7 @@
 
 <script id="post" type="text/x-handlebars-template">
 
-    <article id="post-{{ID}}" data-id="{{ID}}" class="post post-{{ID}}">
+    <article id="post-{{ID}}" data-id="{{ID}}" class="post post-{{ID}} row">
         <div class="featured-image">
             <img src="{{featured_image.guid}}" alt="{{featured_image.title}}" />
         </div>
