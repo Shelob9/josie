@@ -23,6 +23,7 @@ jQuery( function () {
         app.params = params;
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
         $(document).on ("click", "[josie=internal]", function ( event ) {
+
             event.preventDefault();
 
             ID = $( this ).attr( 'data-id' );
@@ -306,7 +307,7 @@ jQuery( function () {
                     if ( item.object == 'post' || item.object == 'page') {
                         $(menuContainer).append(
                             '<li>' +
-                                app.link( item.ID, item.url, item.title, 'post-link', item.title ) +
+                                app.link( item.object_id, item.url, item.title, 'post-link', item.title ) +
                             '</li>'
                         );
                     } else if ( item.object == 'category' || item.object == 'tag' ) {
