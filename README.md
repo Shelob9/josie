@@ -1,66 +1,29 @@
 JOSIE
 =====
 <p style="display:inline-block;text-align:center;"><img src="img/josie.jpg"  /></p>
-Josie is a simple starter single page app written in JavaScript designed to make use of the [WordPress REST API](http://wp-api.org). It runs separately from the WordPress install and is designed to be a starting point for developing an app that uses WordPress as its back-end CMS.
+Josie is a simple starter single page app, written in JavaScript designed to make use of the [WordPress REST API](http://wp-api.org). It runs separately from the WordPress install and is designed to be a starting point for developing an app that uses WordPress as its back-end CMS. The goal is to create starting point for a hybrid web and mobile app.
 
-<strong>Note:</strong> This is all very experimental and under development.</strong> The master branch is a working proof-of-concept for a browser-based web app. It works, but is not the best implimentation. The [node branch](https://github.com/Shelob9/josie/tree/node), which does not work yet, represents what I really want. That is, a simple app framweork that can work in browser and as a standalone mobile app, that is very easy to work with if you have a basic understanding of JavaScript/ jQuery.
+<strong>Note:</strong> This is all very experimental and under development.</strong>
+
+[Node](http://nodejs.om/) and [Express](http://expressjs.com/) are used to create a basic routing engine. This allows for SEO friendly permalinks.
 
 Handlebars.js is used for templating, and methods are provided for getting posts, single posts, taxonomy terms and terms in a taxonomy. Support for managing menus in WordPress is enabled via an optional WordPress plugin. Custom post type and Pods support is planned.
 
 Be sure to read the instructions below as there are some steps that if not followed will prevent this from working properly.
 
+### Setting Up The Node Server
+Make sure you have Node and Grunt installed.
+
+Install all npm dependencies.
+
+`$ node server`
+
 ### Requirements & Recommendations For Your WordPress Site
-##### Required WordPress Setup
 In order to make this work, you must install the REST API Plugin in WordPress.
 
 * [WordPress REST API](https://wordpress.org/plugins/json-rest-api/)
 
-In addition you must address the cross origin request issues (CORS) that will prevent this from working. You can add an Access-Control-Allow-Origin header to JSON requests only by doing something like this in a plugin on your WordPress site:
-
-```php
-    add_filter( 'json_serve_request',
-        function() {
-            header( "Access-Control-Allow-Origin: *" );
-        }
-    );
-    
-```
-
-##### Recommended Plugin
-This app uses a custom endpoint in the REST API to get WordPress menu items. You must either activate it on your site, or hack your own menu in.
-
-@TODO LINK.
-
-##### Recommended Additional WordPress Setup
-
-You may wish to set a specific domain to allow, instead of allowing all domains.
-
-By default, since this app does not do any authentication, the posts_per_page and offset arguments of its requests will be ignored. As a result, you will only be able to get the first page of results and the number of posts will be what is set in your WordPress settings. Alternatively, you may open up these arguments <em>for all non-authenticated users</em>, by adding this to a plugin on your WordPress site:
-
-```php
-    add_filter( 'json_query_vars',
-        function ( $valid_vars ) {
-            $valid_vars = array_merge( $valid_vars, array( 'posts_per_page', 'offset' ) );
-            return $valid_vars;
-        }
-    );
-```
-
-Alone, this hook/function is a potential security risk if you have lots of posts as requesting too many posts at once could DDOS you. It is <em>strongly recommended</em> that you limit the number of posts per page that can be returned, like this:
-
-```php
-    add_filter( 'json_query_var-posts_per_page',
-        function( $posts_per_page ) {
-    
-            if ( 20 < intval( $posts_per_page )  ) {
-                $posts_per_page = 20 ;
-            }
-    
-            return $posts_per_page;
-    
-        }
-    );
-```
+You must set the 'json_query_vars' filter to allow offset as a filter, also you need a [https://github.com/Shelob9/jp-menu-route](https://github.com/Shelob9/jp-menu-route)menu endpoint as well as to set cross-domain origin headers properly. Locally I made a  [plugin that does all of this for you, as well as giving you a server-side API cache and some other fun, useful things](https://github.com/Shelob9/josie-api).
 
 ### Setting Up The App
 In index.html, configuration options are set in the object params, which must be added to the window scope after it is defined. The object must have 6 indexes, as follows:
