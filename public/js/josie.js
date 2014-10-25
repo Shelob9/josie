@@ -63,27 +63,20 @@ jQuery( function () {
         if (
             'index.html' === app.stripTrailingSlash(urlLast )
             || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] )
-            //|| app.stripTrailingSlash( urlLast ) ===  app.lastSegment(app.stripTrailingSlash( protocolSplit[1] ) )
-            || hash.indexOf("page") > -1
         ) {
-
-
             if ( '' == hash || hash == '#' || hash == 'page=1') {
 
                 app.getPosts( 0 );
                 app.pagination( 1 );
             }
-            //paginate posts
-            else if ( hash.indexOf("page") > -1 ) {
-                var offset = hash.split("page=");
-
-                app.getPosts( offset[1] );
-            }
         }
         else {
-
             if ( url.indexOf("taxonomy") > -1 ) {
+                //@TODO This
                 console.log( url.indexOf( 'taxonomy') );
+            }
+            else if( url.indexOf( 'page' ) > -1 ) {
+                app.getPosts( urlLast );
             }
             else {
 
@@ -267,10 +260,10 @@ jQuery( function () {
             var previous = currentPage;
             previous -= 1;
             html += '<li class="arrow unavailable" aria-disabled="true">';
-            html += '<a href="#page=' + previous + '" title="Previous Page">&laquo; Previous</a></li>';
+            html += '<a href="/page/' + previous + '" title="Previous Page">&laquo; Previous</a></li>';
         }
 
-        html += '<li class="arrow"><a href="#page=';
+        html += '<li class="arrow"><a href="/page/';
         html += next;
         html +='" title="Next Page">Next &raquo;</a></li>';
 
