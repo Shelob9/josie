@@ -9,14 +9,17 @@ Josie is a simple starter single page app, written in JavaScript designed to mak
 
 Handlebars.js is used for templating, and methods are provided for getting posts, single posts, taxonomy terms and terms in a taxonomy. Support for managing menus in WordPress is enabled via an optional WordPress plugin. Custom post type and Pods support is planned.
 
-Be sure to read the instructions below as there are some steps that if not followed will prevent this from working properly.
+Be sure to read the instructions below as there are some steps that if not followed will prevent this from working properly. Also, <strong>this is still under development</strong> use in production at your own risk.
 
 ### Setting Up The Node Server
+@TODO Finish this.
 Make sure you have Node and Grunt installed.
 
 Install all npm dependencies.
 
 `$ node server`
+
+Important: By default, the node server will not continue running indefinetly as you may be used to when using Apache or nGinx as a server for WordPress. To keep the server running, one option is to use [Forever](https://www.npmjs.org/package/forever). For more complete details, [see this article](http://www.hacksparrow.com/keep-node-js-script-running-after-logging-out-from-shell.html).
 
 ### Requirements & Recommendations For Your WordPress Site
 In order to make this work, you must install the REST API Plugin in WordPress.
