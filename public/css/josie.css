@@ -6,10 +6,27 @@
     width:100%;
 }
 
+@media (min-width: 600px ) {
+    .post-preview .featured-image img {
+        margin-top: 2%;
+        padding-left: 5%;
+    }
+}
+
 article header, article .entry-content, article .entry-excerpt, article footer {
     padding: 1%;
 }
 
 .row {
     width: 100%;
+}
+@media (max-width: 600px ) {
+    .row {
+        width: 100%;
+        padding: 2%;
+    }
+}
+
+.entry-excerpt.large-9.small-12{
+    padding: 0 7%;
 }
