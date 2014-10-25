@@ -347,7 +347,7 @@ jQuery( function () {
             }
         }
 
-    },
+    };
 
     /**
      * Empty main container
@@ -456,14 +456,6 @@ $( document ).ready(function() {
         }
 
         text = Handlebars.escapeExpression(text);
-/*
-        siteURL = stripTrailingSlash( paramsJosie.siteURL );
-        url = url.split( siteURL );
-        url = url[1];
-        url = stripTrailingSlash( url );
-        url = url.split( '/');
-        url = url[1];
-*/
 
         ID = object.ID;
         ID = Handlebars.escapeExpression( ID );
@@ -494,9 +486,6 @@ $( document ).ready(function() {
         }
         return str;
     }
-
-
-
 
 
 });
