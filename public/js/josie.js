@@ -9,7 +9,7 @@
  */
 
 jQuery( function () {
-    Josie.init( paramsJosie );
+    Josie.init(  );
 } );
 
 (function ( $, app ) {
@@ -19,8 +19,8 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.init = function( params ) {
-        app.params = params;
+    app.init = function(  ) {
+
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
         $(document).on ("click", "[josie=internal]", function ( event ) {
 
