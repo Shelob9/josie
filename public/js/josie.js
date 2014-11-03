@@ -1,3 +1,4 @@
+/**globals jQuery**/
 /**
  * Josie WordPress REST API Powered SPA
  *
@@ -9,7 +10,7 @@
  */
 
 jQuery( function () {
-    Josie.init(  );
+    Josie.init();
 } );
 
 (function ( $, app ) {
@@ -19,7 +20,7 @@ jQuery( function () {
      *
      * @since 0.1.0
      */
-    app.init = function(  ) {
+    app.init = function() {
 
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
         $(document).on ("click", "[josie=internal]", function ( event ) {
