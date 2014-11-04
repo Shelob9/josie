@@ -2,7 +2,7 @@
 /**
  * Josie WordPress REST API Powered SPA
  *
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @copyright 2014 Josh Pollock (Josh@JoshPress.net)
  * @license GNU General Public License v2+
@@ -21,10 +21,21 @@ jQuery( function () {
      * @since 0.1.0
      */
     app.init = function() {
-
         app.menuItems( params.mainMenuName, params.mainMenuContainer );
         $(document).on ("click", "[josie=internal]", function ( event ) {
+            app.events.clickHandler( event );
+        });
 
+    };
+
+    /**
+     * Events object
+     *
+     * @since 0.2.0
+     */
+    app.events = {
+
+        clickHandler : function( event ) {
             event.preventDefault();
 
             ID = $( this ).attr( 'data-id' );
@@ -43,51 +54,46 @@ jQuery( function () {
                 history.pushState( null, null,  href );
             }
 
-        });
+        },
 
+        /**
+         * Handles routing based on URL
+         *
+         * @since 0.2.0
+         */
+        mainRouter : function() {
+            var hash = window.location.hash.replace(/^.*?#/,'');
 
-    };
+            var url = document.URL;
+            var urlLast = app.lastSegment( url );
+            var protocolSplit = url.split( '//');
 
-    /**
-     * Handles routing based on URL
-     *
-     * @since 0.1.0
-     */
-    app.routeEvent = function( ) {
+            if (
+                'index.html' === app.stripTrailingSlash(urlLast )
+                || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] )
+            ) {
+                if ( '' == hash || hash == '#' || hash == 'page=1') {
 
-        var hash = window.location.hash.replace(/^.*?#/,'');
-
-        var url = document.URL;
-        var urlLast = app.lastSegment( url );
-        var protocolSplit = url.split( '//');
-
-        if (
-            'index.html' === app.stripTrailingSlash(urlLast )
-            || app.stripTrailingSlash( urlLast )  === app.stripTrailingSlash( protocolSplit[1] )
-        ) {
-            if ( '' == hash || hash == '#' || hash == 'page=1') {
-
-                app.getPosts( 0 );
-                app.pagination( 1 );
-            }
-        }
-        else {
-            if ( url.indexOf("taxonomy") > -1 ) {
-                //@TODO This
-                console.log( url.indexOf( 'taxonomy') );
-            }
-            else if( url.indexOf( 'page' ) > -1 ) {
-                app.getPosts( urlLast );
+                    app.getPosts( 0 );
+                    app.pagination( 1 );
+                }
             }
             else {
-
-                app.getSinglePost(  '', urlLast );
+                if ( url.indexOf("taxonomy") > -1 ) {
+                    //@TODO This
+                    console.log( url.indexOf( 'taxonomy') );
+                }
+                else if( url.indexOf( 'page' ) > -1 ) {
+                    app.getPosts( urlLast );
+                }
+                else {
+                    app.getSinglePost(  '', urlLast );
+                }
             }
         }
 
-
-
     };
+
 
     /**
      * Get posts
@@ -383,10 +389,10 @@ jQuery( function () {
 
 $( document ).ready(function() {
     //run router on hash change (IE URL change)
-    $(window).on('hashchange', Josie.routeEvent);
+    $(window).on('hashchange', Josie.events.mainRouter );
 
     //route on load
-    Josie.routeEvent();
+    Josie.events.mainRouter();
 
     /**
      * Date Format
