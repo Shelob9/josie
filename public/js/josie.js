@@ -367,15 +367,46 @@ jQuery( function () {
         $( app.params.mainContainer).fadeOut().empty();
     };
 
+    /**
+     * Create an internal link
+     *
+     * These links will trigger the event handler for links. <strong>Do not</strong> use for an external link.
+     *
+     * @since 0.2.0
+     *
+     * @param ID
+     * @param url
+     * @param titleText
+     * @param linkClass
+     * @param text
+     *
+     * @returns {string}
+     */
     app.link = function( ID, url, titleText, linkClass, text ) {
        return  "<a id='link-" + ID + "' href='" + url + "' title='" + titleText  + "' class='" + linkClass + "' josie='internal' data-id='" + ID + "'>" + text + "</a>";
     };
 
+    /**
+     * Get the last segment of a url
+     *
+     * @since 0.2.0
+     * 
+     * @param url
+     * @returns {T}
+     */
     app.lastSegment = function (url) {
         var strippedURL = app.stripTrailingSlash(url);
         return strippedURL.split('/').pop();
     };
 
+    /**
+     * Strip the trailing slash from a link
+     *
+     * @since 0.2.0
+     *
+     * @param str
+     * @returns {*}
+     */
     app.stripTrailingSlash = function(str) {
         if (str.substr(-1) == '/') {
             return str.substr(0, str.length - 1);
