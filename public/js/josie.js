@@ -37,23 +37,23 @@ jQuery( function () {
 
         clickHandler : function( event ) {
             event.preventDefault();
+            link  = event.currentTarget;
+            ID = $( link ).attr( 'data-id' );
+            href = $( link ).attr( 'href' );
 
-            ID = $( this ).attr( 'data-id' );
-            href = $(this).attr( 'href' );
             href = href.split( app.params.siteURL );
             href = href[1];
 
-            if ( $(this).hasClass( 'post-link' ) ) {
+            if ( $( link ).hasClass( 'post-link' ) ) {
                 app.getSinglePost( ID );
                 history.pushState( null, null, href );
             }
 
-            if ( $(this).hasClass( 'term-link' )  ) {
+            if ( $( link ).hasClass( 'term-link' )  ) {
                 app.term( ID );
                 taxonomy = $(this).attr( 'taxonomy');
                 history.pushState( null, null,  href );
             }
-
         },
 
         /**
