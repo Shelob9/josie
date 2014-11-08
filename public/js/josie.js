@@ -38,21 +38,21 @@ jQuery( function () {
         clickHandler : function( event ) {
             event.preventDefault();
             link  = event.currentTarget;
+            title = $( link ).attr( 'title' );
             ID = $( link ).attr( 'data-id' );
             href = $( link ).attr( 'href' );
-
             href = href.split( app.params.siteURL );
             href = href[1];
-
+            href = document.location.protocol + '//' + document.location.host + '/' + href;
             if ( $( link ).hasClass( 'post-link' ) ) {
                 app.getSinglePost( ID );
-                history.pushState( null, null, href );
+                history.replaceState( null, title, href );
             }
 
             if ( $( link ).hasClass( 'term-link' )  ) {
                 app.term( ID );
                 taxonomy = $(this).attr( 'taxonomy');
-                history.pushState( null, null,  href );
+                history.replaceState( null, title,  href );
             }
         },
 
@@ -413,6 +413,7 @@ jQuery( function () {
         }
         return str;
     };
+
 
 
 })( jQuery, window.Josie || ( window.Josie = {} ) );
