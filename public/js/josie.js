@@ -120,7 +120,7 @@ jQuery( function () {
             dataType: 'json',
             success: function(posts){
                 app.emptyContainer();
-                $(app.params.mainContainer).fadeIn();
+
                 $.each( posts, function(index, post) {
                     var source = $('#posts').html();
                     var template = Handlebars.compile(source);
@@ -130,8 +130,10 @@ jQuery( function () {
 
 
                 });
+                $( app.params.mainContainer ).fadeIn();
 
                 app.pagination( offset );
+
             },
             error: function(error){
                 console.log(error);
@@ -278,7 +280,7 @@ jQuery( function () {
         html += '</div>';
 
 
-        $(app.params.mainContainer).append(html);
+        $( app.params.mainContainer ).append( html );
     };
 
     /**
