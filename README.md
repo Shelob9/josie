@@ -19,12 +19,25 @@ This code was written as example code for a series of articles I wrote for Torqu
 * Part 3 is coming soon
 
 ### Setting Up The Node Server
-@TODO Finish this.
-Make sure you have Node and Grunt installed.
+@TODO Use grunt for this
 
-Install all npm dependencies.
+On a server with Node.js installed, cd into your www dir and then:
 
-`$ node server`
+* Clone this repo:
+
+`git clone https://github.com/Shelob9/josie.git app`
+
+* Switch into the directory:
+
+`cd app`
+
+* Install Express:
+
+`npm install express`
+
+* Start the server
+
+`node server`
 
 Important: By default, the node server will not continue running indefinetly as you may be used to when using Apache or nGinx as a server for WordPress. To keep the server running, one option is to use [Forever](https://www.npmjs.org/package/forever). For more complete details, [see this article](http://www.hacksparrow.com/keep-node-js-script-running-after-logging-out-from-shell.html).
 
