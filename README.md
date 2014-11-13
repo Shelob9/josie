@@ -14,7 +14,7 @@ Be sure to read the instructions below as there are some steps that if not follo
 ### In Depth Tutorials
 This code was written as example code for a series of articles I wrote for Torque. You can read them here:
 
-*[Part 1: Setting Up a Node Server for a WordPress REST API-Powered Single Page Web App](http://torquemag.io/setting-node-server-json-rest-api-powered-single-page-web-app/)
+* [Part 1: Setting Up a Node Server for a WordPress REST API-Powered Single Page Web App](http://torquemag.io/setting-node-server-json-rest-api-powered-single-page-web-app/)
 * [Part 2: Preparing Your WordPress Site to Power a Single Page Web App](http://torquemag.io/preparing-wordpress-site-power-single-page-web-app/)
 * Part 3 is coming soon
 
