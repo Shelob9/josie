@@ -16,7 +16,7 @@ This code was written as example code for a series of articles I wrote for Torqu
 
 * [Part 1: Setting Up a Node Server for a WordPress REST API-Powered Single Page Web App](http://torquemag.io/setting-node-server-json-rest-api-powered-single-page-web-app/)
 * [Part 2: Preparing Your WordPress Site to Power a Single Page Web App](http://torquemag.io/preparing-wordpress-site-power-single-page-web-app/)
-* [Building the Front-End for the JSON REST API-Powered Single Page Web App](http://torquemag.io/building-front-end-wordpress-rest-api-powered-single-page-web-app/)
+* [Part 3: Building the Front-End for the JSON REST API-Powered Single Page Web App](http://torquemag.io/building-front-end-wordpress-rest-api-powered-single-page-web-app/)
 
 ### Setting Up The Node Server
 @TODO Use grunt for this
