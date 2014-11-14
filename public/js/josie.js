@@ -46,14 +46,14 @@ jQuery( function () {
             href = document.location.protocol + '//' + document.location.host + '/' + href;
             if ( $( link ).hasClass( 'post-link' ) ) {
                 app.getSinglePost( ID );
-                history.replaceState( null, title, href );
-            }
 
+            }
             if ( $( link ).hasClass( 'term-link' )  ) {
                 app.term( ID );
                 taxonomy = $(this).attr( 'taxonomy');
-                history.replaceState( null, title,  href );
             }
+
+            history.replaceState( null, title, href );
         },
 
         /**
@@ -530,4 +530,5 @@ $( document ).ready(function() {
 
 
 });
+
 
