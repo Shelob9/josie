@@ -11,13 +11,33 @@ Handlebars.js is used for templating, and methods are provided for getting posts
 
 Be sure to read the instructions below as there are some steps that if not followed will prevent this from working properly. Also, <strong>this is still under development</strong> use in production at your own risk.
 
+### In Depth Tutorials
+This code was written as example code for a series of articles I wrote for Torque. You can read them here:
+
+* [Part 1: Setting Up a Node Server for a WordPress REST API-Powered Single Page Web App](http://torquemag.io/setting-node-server-json-rest-api-powered-single-page-web-app/)
+* [Part 2: Preparing Your WordPress Site to Power a Single Page Web App](http://torquemag.io/preparing-wordpress-site-power-single-page-web-app/)
+* Part 3 is coming soon
+
 ### Setting Up The Node Server
-@TODO Finish this.
-Make sure you have Node and Grunt installed.
+@TODO Use grunt for this
 
-Install all npm dependencies.
+On a server with Node.js installed, cd into your www dir and then:
 
-`$ node server`
+* Clone this repo:
+
+`git clone https://github.com/Shelob9/josie.git app`
+
+* Switch into the directory:
+
+`cd app`
+
+* Install Express:
+
+`npm install express`
+
+* Start the server
+
+`node server`
 
 Important: By default, the node server will not continue running indefinetly as you may be used to when using Apache or nGinx as a server for WordPress. To keep the server running, one option is to use [Forever](https://www.npmjs.org/package/forever). For more complete details, [see this article](http://www.hacksparrow.com/keep-node-js-script-running-after-logging-out-from-shell.html).
 
